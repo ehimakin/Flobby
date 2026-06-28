@@ -35,6 +35,17 @@ The HTTPS script uses a local certificate through `@vitejs/plugin-basic-ssl`. On
 
 The browser must report a secure context for tilt access. Plain HTTP is useful for desktop/in-app browser testing, but iPhone motion permissions generally require HTTPS.
 
+## Fullscreen On iPhone
+
+iPhone Safari does not reliably expose fullscreen for arbitrary interactive page elements. For a browser-chrome-free game:
+
+1. Open Flobby's HTTPS URL in Safari.
+2. Tap Share.
+3. Choose Add to Home Screen.
+4. Launch Flobby from its Home Screen icon.
+
+The web app manifest and Apple web-app metadata request fullscreen landscape display when launched this way. Other browsers that expose the Fullscreen API get an on-screen fullscreen control.
+
 ## Controls
 
 - Move: left/right arrows, A/D, touch buttons, or tilt after permission is granted.

@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#17202a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Flobby" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>Flobby</title>
   </head>
@@ -15,6 +19,11 @@
         <p>Rotate to landscape</p>
       </div>
     </div>
+    <button id="fullscreen-button" type="button" aria-label="Enter fullscreen" title="Enter fullscreen">&#x26F6;</button>
+    <aside id="install-hint" aria-live="polite">
+      <span>Add to Home Screen for fullscreen</span>
+      <button type="button" aria-label="Dismiss">&times;</button>
+    </aside>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
