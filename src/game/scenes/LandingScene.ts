@@ -19,7 +19,7 @@ export class LandingScene extends Phaser.Scene {
     this.addStagePreview();
 
     this.add
-      .text(GAME_WIDTH / 2, 128, "Flobby", {
+      .text(GAME_WIDTH / 2, 128, "Clayboy", {
         color: "#f8f4e8",
         fontFamily: "Inter, system-ui, sans-serif",
         fontSize: "78px",
@@ -46,7 +46,7 @@ export class LandingScene extends Phaser.Scene {
     });
 
     this.statusText = this.add
-      .text(GAME_WIDTH / 2, 378, this.tilt.statusLabel, {
+      .text(GAME_WIDTH / 2, 250, this.tilt.statusLabel, {
         color: "#cbd7df",
         fontFamily: "Inter, system-ui, sans-serif",
         fontSize: "15px"
@@ -54,7 +54,7 @@ export class LandingScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.diagnosticText = this.add
-      .text(GAME_WIDTH / 2, 402, this.tilt.getDiagnosticLabel(), {
+      .text(GAME_WIDTH / 2, 274, this.tilt.getDiagnosticLabel(), {
         color: "#7f8d9a",
         fontFamily: "Inter, system-ui, sans-serif",
         fontSize: "12px"
@@ -120,7 +120,7 @@ export class LandingScene extends Phaser.Scene {
 
     this.add.image(394, platformY - 56, "fruit");
     this.add.image(562, platformY - 56, "fruit");
-    const hero = this.add.image(482, platformY - 55, "flobby").setScale(1.35);
+    const hero = this.add.image(482, platformY - 55, "clayboy-normal").setDisplaySize(65, 65);
 
     this.tweens.add({
       targets: hero,

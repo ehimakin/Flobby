@@ -8,52 +8,52 @@ type TiltSnapshot = {
   calibratedX: number;
   beta: number;
   gamma: number;
+  motionX: number;
+  motionY: number;
   sampleCount: number;
-  source: "beta" | "gamma" | "none";
+  source: "motion-x" | "motion-y" | "none";
   state: TiltPermissionState;
   detail: string;
 };
 
 const DEAD_ZONE = 0.1;
-const MAX_TILT_DEGREES = 22;
+const MAX_TILT_ACCELERATION = 3.8;
 const SMOOTHING = 0.22;
 
 export class TiltController {
   private rawX = 0;
   private beta = 0;
   private gamma = 0;
+  private motionX = 0;
+  private motionY = 0;
   private axisX = 0;
   private calibratedX = 0;
   private neutralX = 0;
-  private neutralBeta = 0;
-  private neutralGamma = 0;
   private hasSample = false;
   private sampleCount = 0;
-  private source: "beta" | "gamma" | "none" = "none";
+  private source: "motion-x" | "motion-y" | "none" = "none";
   private detail = "";
   private permissionState: TiltPermissionState = "idle";
-  private readonly onOrientation = (event: DeviceOrientationEvent): void => {
-    const reading = this.getGameHorizontalTilt(event);
+  private readonly onMotion = (event: DeviceMotionEvent): void => {
+    const reading = this.getScreenHorizontalAcceleration(event);
 
     if (reading === null) {
       return;
     }
 
-    this.beta = reading.beta;
-    this.gamma = reading.gamma;
+    this.motionX = reading.motionX;
+    this.motionY = reading.motionY;
     this.source = reading.source;
     this.sampleCount += 1;
 
     if (!this.hasSample) {
-      this.neutralBeta = reading.beta;
-      this.neutralGamma = reading.gamma;
       this.neutralX = reading.rawX;
       this.hasSample = true;
     }
 
     this.rawX = reading.rawX;
-    this.calibratedX = reading.source === "beta" ? this.beta - this.neutralBeta : this.gamma - this.neutralGamma;
-    const targetAxis = Phaser.Math.Clamp(this.calibratedX / MAX_TILT_DEGREES, -1, 1);
+    this.calibratedX = this.rawX - this.neutralX;
+    const targetAxis = Phaser.Math.Clamp(this.calibratedX / MAX_TILT_ACCELERATION, -1, 1);
     this.axisX = Phaser.Math.Linear(this.axisX, targetAxis, SMOOTHING);
   };
 
@@ -76,6 +76,8 @@ export class TiltController {
       calibratedX: this.calibratedX,
       beta: this.beta,
       gamma: this.gamma,
+      motionX: this.motionX,
+      motionY: this.motionY,
       sampleCount: this.sampleCount,
       source: this.source,
       state: this.permissionState,
@@ -110,17 +112,17 @@ export class TiltController {
       return this.permissionState;
     }
 
-    if (!("DeviceOrientationEvent" in window)) {
+    if (!("DeviceMotionEvent" in window)) {
       this.permissionState = "unsupported";
-      this.detail = "orientation API missing";
+      this.detail = "motion API missing";
       return this.permissionState;
     }
 
     try {
-      const orientation = DeviceOrientationEvent as DeviceOrientationEventConstructor;
+      const motion = DeviceMotionEvent as DeviceMotionEventConstructor;
 
-      if (orientation.requestPermission) {
-        const permission = await orientation.requestPermission();
+      if (motion.requestPermission) {
+        const permission = await motion.requestPermission();
         this.permissionState = permission === "granted" ? "granted" : "denied";
         this.detail = permission === "granted" ? "" : "Safari returned denied";
       } else {
@@ -133,16 +135,14 @@ export class TiltController {
     }
 
     if (this.permissionState === "granted") {
-      window.removeEventListener("deviceorientation", this.onOrientation);
-      window.addEventListener("deviceorientation", this.onOrientation);
+      window.removeEventListener("devicemotion", this.onMotion);
+      window.addEventListener("devicemotion", this.onMotion);
     }
 
     return this.permissionState;
   }
 
   calibrate(): void {
-    this.neutralBeta = this.beta;
-    this.neutralGamma = this.gamma;
     this.neutralX = this.rawX;
     this.axisX = 0;
     this.calibratedX = 0;
@@ -150,43 +150,46 @@ export class TiltController {
   }
 
   destroy(): void {
-    window.removeEventListener("deviceorientation", this.onOrientation);
+    window.removeEventListener("devicemotion", this.onMotion);
   }
 
   getDiagnosticLabel(): string {
-    const orientation = "DeviceOrientationEvent" in window ? (DeviceOrientationEvent as DeviceOrientationEventConstructor) : undefined;
-    const permissionApi = orientation?.requestPermission ? "prompt api yes" : "prompt api no";
+    const motion = "DeviceMotionEvent" in window ? (DeviceMotionEvent as DeviceMotionEventConstructor) : undefined;
+    const permissionApi = motion?.requestPermission ? "motion prompt yes" : "motion prompt no";
     const secure = window.isSecureContext ? "secure yes" : "secure no";
     return `${secure} / ${permissionApi}`;
   }
 
-  private getGameHorizontalTilt(
-    event: DeviceOrientationEvent
-  ): { rawX: number; beta: number; gamma: number; source: "beta" | "gamma" } | null {
-    const beta = event.beta ?? 0;
-    const gamma = event.gamma ?? 0;
+  private getScreenHorizontalAcceleration(
+    event: DeviceMotionEvent
+  ): { rawX: number; motionX: number; motionY: number; source: "motion-x" | "motion-y" } | null {
+    const acceleration = event.accelerationIncludingGravity;
 
-    if (event.beta === null && event.gamma === null) {
+    if (!acceleration || (acceleration.x === null && acceleration.y === null)) {
       return null;
     }
 
-    const windowOrientation = (window as Window & { orientation?: number }).orientation;
-    const angle = screen.orientation?.angle ?? windowOrientation ?? 0;
+    const motionX = acceleration.x ?? 0;
+    const motionY = acceleration.y ?? 0;
+    const legacyAngle = (window as Window & { orientation?: number }).orientation;
+    const angle = typeof legacyAngle === "number" ? legacyAngle : screen.orientation?.angle ?? 0;
     const isLandscape = window.innerWidth > window.innerHeight || Math.abs(angle) === 90;
-    const betaDelta = beta - this.neutralBeta;
-    const gammaDelta = gamma - this.neutralGamma;
-    const preferredSource = isLandscape ? "beta" : "gamma";
-    const fallbackSource = preferredSource === "beta" ? "gamma" : "beta";
-    const preferredDelta = preferredSource === "beta" ? betaDelta : gammaDelta;
-    const fallbackDelta = fallbackSource === "beta" ? betaDelta : gammaDelta;
-    const source = this.hasSample && Math.abs(fallbackDelta) > Math.abs(preferredDelta) + 2 ? fallbackSource : preferredSource;
-    const rawX = source === "beta" ? beta : gamma;
+
+    if (isLandscape) {
+      const direction = angle === 90 ? -1 : 1;
+      return {
+        rawX: Phaser.Math.Clamp(motionY * direction, -10, 10),
+        motionX,
+        motionY,
+        source: "motion-y"
+      };
+    }
 
     return {
-      rawX: Phaser.Math.Clamp(rawX, -90, 90),
-      beta: Phaser.Math.Clamp(beta, -180, 180),
-      gamma: Phaser.Math.Clamp(gamma, -90, 90),
-      source
+      rawX: Phaser.Math.Clamp(motionX, -10, 10),
+      motionX,
+      motionY,
+      source: "motion-x"
     };
   }
 

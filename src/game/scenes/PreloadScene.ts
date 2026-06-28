@@ -7,6 +7,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload(): void {
+    this.load.image("clayboy-normal", "assets/clayboy/clayboy-normal.png");
     this.createGeneratedTextures();
   }
 

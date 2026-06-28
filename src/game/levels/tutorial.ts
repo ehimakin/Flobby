@@ -1,12 +1,10 @@
-export type TutorialTile = "#" | "." | "F" | "S" | "E" | "^";
+import type { LevelDefinition } from "./types";
 
-export type TutorialLevel = {
-  name: string;
-  tiles: string[];
-};
-
-export const tutorialLevel: TutorialLevel = {
+export const tutorialLevel: LevelDefinition = {
+  id: "tutorial",
+  number: 1,
   name: "First Jar",
+  nextLevelId: "level-2",
   tiles: [
     "########################",
     "#......................#",
