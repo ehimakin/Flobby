@@ -1,0 +1,9 @@
+{
+  "name": "Flobby",
+  "short_name": "Flobby",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#17202a",
+  "theme_color": "#17202a",
+  "orientation": "landscape"
+}
