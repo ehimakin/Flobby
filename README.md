@@ -15,7 +15,25 @@ npm install
 npm run dev
 ```
 
-The Vite dev server uses local HTTPS through `@vitejs/plugin-basic-ssl`, which is useful for testing iPhone motion/orientation APIs. On iOS, tilt input must be enabled from a tap gesture inside the game.
+The default Vite dev server uses HTTP so the Codex in-app browser can load `http://localhost:5173`.
+
+For iPhone motion/orientation testing, run:
+
+```bash
+npm run dev:https
+```
+
+The HTTPS script uses a local certificate through `@vitejs/plugin-basic-ssl`. On iOS, tilt input must be enabled from a tap gesture inside the game.
+
+## Tilt Testing
+
+1. Start the HTTPS server with `npm run dev:https`.
+2. Open the network URL on the iPhone, for example `https://192.168.1.150:5174`.
+3. Tap `Tilt` on the landing screen.
+4. Allow motion/orientation access.
+5. Hold the phone in a comfortable neutral position and tap `Cal` in the tutorial if movement drifts.
+
+The browser must report a secure context for tilt access. Plain HTTP is useful for desktop/in-app browser testing, but iPhone motion permissions generally require HTTPS.
 
 ## Controls
 

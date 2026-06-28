@@ -8,13 +8,23 @@ export type PlayerInputState = {
 
 export class InputController {
   private readonly cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-  private readonly keys: Record<"left" | "right" | "flip" | "space" | "reset", Phaser.Input.Keyboard.Key>;
+  private readonly keys: Record<"left" | "right" | "flip" | "space" | "reset" | "calibrate", Phaser.Input.Keyboard.Key>;
   private readonly touchState = {
     left: false,
     right: false,
     flip: false
   };
   private flipWasDown = false;
+  private readonly onScreenTap = (
+    _pointer: Phaser.Input.Pointer,
+    currentlyOver: Phaser.GameObjects.GameObject[]
+  ): void => {
+    const tappedControl = currentlyOver.some((gameObject) => gameObject.getData("blocks-screen-flip") === true);
+
+    if (!tappedControl) {
+      this.touchState.flip = true;
+    }
+  };
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -30,8 +40,14 @@ export class InputController {
       right: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
       flip: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
       space: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-      reset: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
+      reset: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R),
+      calibrate: scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
     };
+
+    scene.input.on(Phaser.Input.Events.POINTER_DOWN, this.onScreenTap);
+    scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      scene.input.off(Phaser.Input.Events.POINTER_DOWN, this.onScreenTap);
+    });
   }
 
   read(): PlayerInputState {
@@ -52,7 +68,12 @@ export class InputController {
     return Phaser.Input.Keyboard.JustDown(this.keys.reset);
   }
 
-  bindTouchButton(button: Phaser.GameObjects.GameObject, control: "left" | "right" | "flip"): void {
+  get calibratePressed(): boolean {
+    return Phaser.Input.Keyboard.JustDown(this.keys.calibrate);
+  }
+
+  bindTouchButton(button: Phaser.GameObjects.GameObject, control: "left" | "right"): void {
+    button.setData("blocks-screen-flip", true);
     button.setInteractive({ useHandCursor: true });
     button.on("pointerdown", () => {
       this.touchState[control] = true;

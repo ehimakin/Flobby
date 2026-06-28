@@ -16,15 +16,18 @@ export class TutorialLevelScene extends Phaser.Scene {
   private platforms?: Phaser.Physics.Arcade.StaticGroup;
   private hazards?: Phaser.Physics.Arcade.StaticGroup;
   private fruits?: Phaser.Physics.Arcade.StaticGroup;
-  private exit?: Phaser.Physics.Arcade.StaticImage;
+  private exit?: Phaser.Physics.Arcade.Image;
   private fruitCount = 0;
   private fruitText?: Phaser.GameObjects.Text;
+  private tilt?: TiltController;
+  private tiltText?: Phaser.GameObjects.Text;
 
   constructor() {
     super("TutorialLevelScene");
   }
 
   create(): void {
+    this.fruitCount = 0;
     this.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2, "screen-bg");
     this.physics.world.setBounds(LEVEL_ORIGIN.x, LEVEL_ORIGIN.y, tutorialLevel.tiles[0].length * TILE_SIZE, tutorialLevel.tiles.length * TILE_SIZE);
 
@@ -43,8 +46,8 @@ export class TutorialLevelScene extends Phaser.Scene {
       this.physics.add.overlap(this.player, this.exit, () => this.tryExit());
     }
 
-    const tilt = this.registry.get("tilt") as TiltController | undefined;
-    this.inputController = new InputController(this, tilt);
+    this.tilt = this.registry.get("tilt") as TiltController | undefined;
+    this.inputController = new InputController(this, this.tilt);
     this.createHud();
     this.createTouchControls();
   }
@@ -64,6 +67,12 @@ export class TutorialLevelScene extends Phaser.Scene {
     if (this.inputController.resetPressed) {
       this.restartLevel();
     }
+
+    if (this.inputController.calibratePressed) {
+      this.calibrateTilt();
+    }
+
+    this.updateTiltHud();
   }
 
   private buildLevel(): Phaser.Math.Vector2 {
@@ -120,6 +129,16 @@ export class TutorialLevelScene extends Phaser.Scene {
       })
       .setOrigin(0, 0.5);
 
+    this.tiltText = this.add
+      .text(GAME_WIDTH - 272, 24, this.tilt?.statusLabel ?? "keyboard / touch ready", {
+        color: "#cbd7df",
+        fontFamily: "Inter, system-ui, sans-serif",
+        fontSize: "14px"
+      })
+      .setOrigin(0, 0.5);
+
+    this.addCalibrateButton();
+
     this.add
       .text(GAME_WIDTH / 2, GAME_HEIGHT - 26, "←   →        ⤴", {
         color: "#cbd7df",
@@ -136,11 +155,9 @@ export class TutorialLevelScene extends Phaser.Scene {
 
     const left = this.addControlButton(88, GAME_HEIGHT - 70, "‹");
     const right = this.addControlButton(164, GAME_HEIGHT - 70, "›");
-    const flip = this.addControlButton(GAME_WIDTH - 104, GAME_HEIGHT - 70, "⤴");
 
     this.inputController.bindTouchButton(left, "left");
     this.inputController.bindTouchButton(right, "right");
-    this.inputController.bindTouchButton(flip, "flip");
   }
 
   private addControlButton(x: number, y: number, label: string): Phaser.GameObjects.Container {
@@ -159,9 +176,27 @@ export class TutorialLevelScene extends Phaser.Scene {
     return button;
   }
 
+  private addCalibrateButton(): void {
+    const bg = this.add.rectangle(0, 0, 72, 32, COLORS.panel, 0.92).setStrokeStyle(2, COLORS.mint);
+    const text = this.add
+      .text(0, -1, "Cal", {
+        color: "#f8f4e8",
+        fontFamily: "Inter, system-ui, sans-serif",
+        fontSize: "14px",
+        fontStyle: "800"
+      })
+      .setOrigin(0.5);
+    const button = this.add.container(GAME_WIDTH - 350, 26, [bg, text]);
+    button.setSize(72, 32);
+    button.setData("blocks-screen-flip", true);
+    button.setInteractive({ useHandCursor: true });
+    button.on("pointerdown", () => this.calibrateTilt());
+  }
+
   private collectFruit(fruit: Phaser.Physics.Arcade.Image): void {
     fruit.disableBody(true, true);
-    const collected = this.fruits?.countActive(false) ?? 0;
+    const remaining = this.fruits?.countActive(true) ?? 0;
+    const collected = this.fruitCount - remaining;
     this.fruitText?.setText(`${collected}/${this.fruitCount}`);
   }
 
@@ -176,5 +211,27 @@ export class TutorialLevelScene extends Phaser.Scene {
 
   private restartLevel(): void {
     this.scene.restart();
+  }
+
+  private calibrateTilt(): void {
+    this.tilt?.calibrate();
+    this.tiltText?.setText("tilt calibrated");
+  }
+
+  private updateTiltHud(): void {
+    if (!this.tiltText || !this.tilt) {
+      return;
+    }
+
+    const snapshot = this.tilt.snapshot;
+
+    if (snapshot.state === "granted") {
+      this.tiltText.setText(
+        `tilt ${snapshot.axisX.toFixed(2)} ${snapshot.source} b${snapshot.beta.toFixed(0)} g${snapshot.gamma.toFixed(0)} #${snapshot.sampleCount}`
+      );
+      return;
+    }
+
+    this.tiltText.setText(this.tilt.statusLabel);
   }
 }

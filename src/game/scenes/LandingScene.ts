@@ -6,6 +6,9 @@ import { createButton } from "../ui/createButton";
 export class LandingScene extends Phaser.Scene {
   private tilt = new TiltController();
   private statusText?: Phaser.GameObjects.Text;
+  private diagnosticText?: Phaser.GameObjects.Text;
+  private nativeTiltButton?: HTMLButtonElement;
+  private lastStatus = "";
 
   constructor() {
     super("LandingScene");
@@ -43,28 +46,70 @@ export class LandingScene extends Phaser.Scene {
     });
 
     this.statusText = this.add
-      .text(GAME_WIDTH / 2, 382, "keyboard / touch ready", {
+      .text(GAME_WIDTH / 2, 378, this.tilt.statusLabel, {
         color: "#cbd7df",
         fontFamily: "Inter, system-ui, sans-serif",
         fontSize: "15px"
       })
       .setOrigin(0.5);
+
+    this.diagnosticText = this.add
+      .text(GAME_WIDTH / 2, 402, this.tilt.getDiagnosticLabel(), {
+        color: "#7f8d9a",
+        fontFamily: "Inter, system-ui, sans-serif",
+        fontSize: "12px"
+      })
+      .setOrigin(0.5);
+
+    this.createNativeTiltButton();
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.removeNativeTiltButton());
   }
 
-  shutdown(): void {
-    this.tilt.destroy();
+  update(): void {
+    const snapshot = this.tilt.snapshot;
+    const status =
+      snapshot.state === "granted"
+        ? `${this.tilt.statusLabel}  ${snapshot.axisX.toFixed(2)}  samples ${snapshot.sampleCount}`
+        : this.tilt.statusLabel;
+
+    if (status !== this.lastStatus) {
+      this.statusText?.setText(status);
+      this.diagnosticText?.setText(this.tilt.getDiagnosticLabel());
+      this.lastStatus = status;
+    }
   }
 
   private async enableTilt(): Promise<void> {
+    this.statusText?.setText("requesting tilt...");
     const state = await this.tilt.requestAccess();
-    const status = {
-      granted: "tilt ready",
-      denied: "tilt unavailable",
-      unsupported: "tilt unsupported",
-      idle: "keyboard / touch ready"
-    }[state];
+    this.statusText?.setText(this.tilt.statusLabel);
 
-    this.statusText?.setText(status);
+    if (state === "granted") {
+      this.tilt.calibrate();
+      this.nativeTiltButton?.classList.add("is-ready");
+      if (this.nativeTiltButton) {
+        this.nativeTiltButton.textContent = "Tilt ready";
+      }
+    }
+  }
+
+  private createNativeTiltButton(): void {
+    this.removeNativeTiltButton();
+
+    const button = document.createElement("button");
+    button.className = "native-tilt-button";
+    button.type = "button";
+    button.textContent = "Enable tilt";
+    button.addEventListener("click", () => {
+      void this.enableTilt();
+    });
+    document.body.appendChild(button);
+    this.nativeTiltButton = button;
+  }
+
+  private removeNativeTiltButton(): void {
+    this.nativeTiltButton?.remove();
+    this.nativeTiltButton = undefined;
   }
 
   private addStagePreview(): void {

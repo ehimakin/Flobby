@@ -19,3 +19,83 @@ body {
 canvas {
   display: block;
 }
+
+#rotate-device {
+  display: none;
+}
+
+.native-tilt-button {
+  position: fixed;
+  z-index: 10;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  width: min(220px, calc(100vw - 32px));
+  height: 48px;
+  border: 2px solid #70d6a8;
+  border-radius: 18px;
+  background: #223041;
+  color: #f8f4e8;
+  font: 800 16px Inter, ui-sans-serif, system-ui, sans-serif;
+  transform: translateX(-50%);
+  touch-action: manipulation;
+}
+
+.native-tilt-button.is-ready {
+  background: #2f755a;
+}
+
+@media (orientation: portrait) and (max-width: 820px) {
+  #rotate-device {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    background: #111820;
+    color: #f8f4e8;
+  }
+
+  .rotate-device__panel {
+    display: grid;
+    gap: 18px;
+    justify-items: center;
+    font: 800 18px Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .rotate-device__panel p {
+    margin: 0;
+  }
+
+  .rotate-device__phone {
+    width: 62px;
+    height: 104px;
+    border: 4px solid #70d6a8;
+    border-radius: 14px;
+    position: relative;
+    animation: rotate-phone 1.8s ease-in-out infinite;
+  }
+
+  .rotate-device__phone::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #70d6a8;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes rotate-phone {
+  0%,
+  28% {
+    transform: rotate(0deg);
+  }
+
+  72%,
+  100% {
+    transform: rotate(90deg);
+  }
+}

@@ -45,7 +45,7 @@ export class Flobby extends Phaser.Physics.Arcade.Sprite {
   }
 
   private applyGravity(): void {
-    this.body?.setGravityY(GRAVITY * this.gravitySign);
+    (this.body as Phaser.Physics.Arcade.Body | null)?.setGravityY(GRAVITY * this.gravitySign);
   }
 
   private isPinned(): boolean {
