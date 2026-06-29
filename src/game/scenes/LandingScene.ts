@@ -118,8 +118,8 @@ export class LandingScene extends Phaser.Scene {
       this.add.image(282 + index * 36, platformY, "tile-ground").setAlpha(0.86);
     }
 
-    this.add.image(394, platformY - 56, "fruit");
-    this.add.image(562, platformY - 56, "fruit");
+    this.add.image(394, platformY - 56, "mineral");
+    this.add.image(562, platformY - 56, "mineral");
     const hero = this.add.image(482, platformY - 55, "clayboy-normal").setDisplaySize(65, 65);
 
     this.tweens.add({

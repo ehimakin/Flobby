@@ -1,0 +1,33 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "level_1.tmx": {
+            "expandedObjectLayers": [
+                5,
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 754.6666666666665,
+                "y": 507.99999999999994
+            }
+        }
+    },
+    "last.exportedFilePath": "/Users/ehim/dev/Flobby/public/assets/tiled/maps",
+    "map.height": 27,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 20,
+    "map.tileWidth": 20,
+    "map.width": 48,
+    "openFiles": [
+    ],
+    "project": "untitled.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "level_1.tmx"
+    ]
+}

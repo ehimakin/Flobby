@@ -8,6 +8,8 @@
     "dev:https": "VITE_HTTPS=true vite --host 0.0.0.0 --port 5174",
     "build": "tsc && vite build",
     "preview": "vite preview --host 0.0.0.0",
+    "tiled:generate": "node scripts/generate-tiled-levels.ts",
+    "tiled:validate": "node scripts/validate-tiled-levels.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

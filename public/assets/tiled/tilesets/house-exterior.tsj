@@ -1,0 +1,96 @@
+{
+  "columns": 4,
+  "image": "house-exterior.png",
+  "imageheight": 144,
+  "imagewidth": 144,
+  "margin": 0,
+  "name": "house-exterior",
+  "spacing": 0,
+  "tilecount": 16,
+  "tileheight": 36,
+  "tilewidth": 36,
+  "tiles": [
+    {
+      "id": 0,
+      "properties": [
+        {
+          "name": "collision",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "properties": [
+        {
+          "name": "collision",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "properties": [
+        {
+          "name": "exitStyle",
+          "type": "string",
+          "value": "mortar-crack"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "properties": [
+        {
+          "name": "exitStyle",
+          "type": "string",
+          "value": "window-crack"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "properties": [
+        {
+          "name": "exitStyle",
+          "type": "string",
+          "value": "drainpipe-gap"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "properties": [
+        {
+          "name": "collision",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "properties": [
+        {
+          "name": "collision",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "properties": [
+        {
+          "name": "collision",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    }
+  ],
+  "type": "tileset",
+  "version": "1.10"
+}

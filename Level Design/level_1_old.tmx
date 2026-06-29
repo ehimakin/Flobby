@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="31">
+ <editorsettings>
+  <export target="../public/assets/tiled/maps/level-01.tmj" format="json"/>
+ </editorsettings>
+ <imagelayer id="2" name="Background" offsetx="-4.29098" offsety="2.14549">
+  <image source="../public/assets/levels/Level_1_bg.png" width="960" height="640"/>
+ </imagelayer>
+ <objectgroup id="3" name="Collision" visible="0">
+  <object id="3" name="Floor" x="0" y="608" width="960" height="32"/>
+  <object id="12" name="right_Panel" x="628.629" y="60.0738" width="328.26" height="36"/>
+  <object id="16" name="Arch" x="109.42" y="521.354">
+   <polygon points="-15.0184,85.8196 1.42109e-14,-79.3832 27.8914,-137.311 66.5102,-199.531 120.148,-229.568 197.385,-229.568 253.168,-197.385 289.641,-141.602 311.096,-66.5102 321.824,17.1639 420.516,17.1639 416.225,-83.6742 401.207,-167.348 341.133,-287.496 293.932,-332.551 208.113,-381.897 141.602,-384.043 70.8012,-375.461 2.14549,-317.533 -36.4733,-261.75 -90.1106,-152.33 -107.275,-36.4733 -113.711,51.4918 -107.275,85.8196"/>
+  </object>
+  <object id="24" name="Ceiling" x="-0.30942" y="0.254107" width="965.836" height="0.0368756"/>
+ </objectgroup>
+ <objectgroup id="4" name="Entities">
+  <object id="19" name="player_spawn" type="player_spawn" x="261.75" y="600.555" visible="0">
+   <point/>
+  </object>
+  <object id="20" name="enemy_slug_1" type="enemy_slug" x="750.922" y="573.682" width="36.4733" height="36.4733">
+   <properties>
+    <property name="patrol_max_x" type="float" value="220"/>
+    <property name="patrol_mix_x" type="float" value="120"/>
+    <property name="speed" type="float" value="20"/>
+   </properties>
+  </object>
+  <object id="25" name="Goal" type="finish" x="954.744" y="46.0369">
+   <point/>
+  </object>
+  <object id="26" name="flake_1" type="fairy_flake" x="45.0553" y="253.168">
+   <point/>
+  </object>
+  <object id="27" name="iron_2" type="mineral" x="480" y="590.01">
+   <point/>
+  </object>
+  <object id="28" name="iron_1" type="mineral" x="266.041" y="107.275">
+   <point/>
+  </object>
+  <object id="29" name="iron_3" type="mineral" x="777" y="34.3279">
+   <point/>
+  </object>
+ </objectgroup>
+ <layer id="1" name="Tile Layer 1" width="30" height="20">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

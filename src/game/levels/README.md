@@ -11,6 +11,6 @@ Tile vocabulary:
 - `#` solid ground
 - `.` empty space
 - `S` player spawn
-- `F` fruit pickup
+- `F` mineral pickup
 - `E` exit
 - `^` hazard

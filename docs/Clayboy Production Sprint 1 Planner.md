@@ -18,7 +18,7 @@ Turn the current gameplay prototype into a production-quality vertical slice. Sp
 
 ## 2. Replace Prototype Graphics
 
-- [ ] Produce Clayboy's first production sprite animations.
+- [x] Produce Clayboy's first production sprite animations: gravity flip and directional movement.
 - [ ] Create the first house-interior dungeon tileset.
 - [ ] Create fruit, exit, door, and switch assets.
 - [ ] Create spike, lava, and moving-platform assets.
@@ -28,13 +28,13 @@ Turn the current gameplay prototype into a production-quality vertical slice. Sp
 
 ## 3. Move Level Authoring Into Tiled
 
-- [ ] Define the Tiled tileset and project configuration.
-- [ ] Add terrain and collision layers.
-- [ ] Add entity, fruit, exit, and hazard object layers.
-- [ ] Add camera-room boundaries.
+- [x] Define the Tiled tileset and project configuration.
+- [x] Add terrain and collision layers.
+- [x] Add entity, fruit, exit, and hazard object layers.
+- [x] Add camera-room boundaries.
 - [ ] Add door, switch, enemy-path, and puzzle-trigger layers.
-- [ ] Build the Phaser Tiled JSON loader.
-- [ ] Migrate Levels 1-3 from string maps.
+- [x] Build the Phaser Tiled JSON loader.
+- [x] Migrate Levels 1-3 from string maps.
 - [ ] Validate spawn points, exits, passages, and reachable objectives during loading.
 
 ## 4. Build Reusable Game Systems
